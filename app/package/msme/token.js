@@ -1,24 +1,12 @@
-async function getLocalStorage(page) {
-  const localStorageData = await page.evaluate(() => {
-    let json = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      json[key] = localStorage.getItem(key);
-    }
-    return json;
-  });
-  return localStorageData;
-}
+import { getLocalStorage, getCookie, waitForTimeout } from './utils';
 
-async function getCookie(page) {
-  const cookies = await page.evaluate(() => {
-    return document.cookie;
-  });
-  // const cookies = await page.cookies();
-  return cookies;
-}
-
-async function getToken(page) {
+/**
+ * 监听请求
+ * @date 2023-04-07
+ * @param {any} page
+ * @returns {any}
+ */
+async function listenReq(page) {
   return new Promise(resolve => {
     let sensorDatas = [];
     page.on('request', interceptedRequest => {
@@ -28,7 +16,6 @@ async function getToken(page) {
       if (interceptedRequest.resourceType() === 'xhr') {
         let postData = interceptedRequest.postData();
         if (postData && postData.indexOf('sensor_data') !== -1) {
-          // console.log('postData: ', postData);
           sensorDatas.push(postData);
         }
       }
@@ -40,25 +27,23 @@ async function getToken(page) {
   });
 }
 
-function waitForTimeout(timeout) {
-  return new Promise(resolve => {
-    setTimeout(resolve, timeout);
-  });
-}
-
+/**
+ * 获取鉴权相关数据
+ * @date 2023-04-07
+ * @param {any} page
+ * @param {any} opts
+ * @returns {any}
+ */
 const token = async (page, opts) => {
-  console.log('opts: ', opts);
   await page.setRequestInterception(true);
   let sensorDatas = [];
-  getToken(page).then(result => {
+  listenReq(page).then(result => {
     sensorDatas = result;
   });
   await page.goto(opts.url, { timeout: 120000 });
-
   await waitForTimeout(1000);
   let localStorage = await getLocalStorage(page);
   let cookie = await getCookie(page);
-
   let authData = {
     localStorage,
     cookie,

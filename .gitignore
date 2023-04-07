@@ -11,7 +11,6 @@ suspect/
 .DS_Store
 *.sw*
 *.un~
-.vscode/
 dist
 learn
 tokens.json

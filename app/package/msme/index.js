@@ -26,9 +26,9 @@ let launchOptions = {
     '--disable-infobars',
     '--disable-features=IsolateOrigins,site-per-process'
   ],
-  'ignoreDefaultArgs': ["--enable-automation"],
-  'devtools': true,
-  'dumpio': true
+  ignoreDefaultArgs: ['--enable-automation'],
+  devtools: true,
+  dumpio: true
 };
 
 /**
@@ -59,7 +59,7 @@ class PuppeteerYesbank {
       };
       this._browser = await puppeteer.launch(launchOptions);
       this._browser.on('disconnected', e => {
-        console.log('浏览器关闭了', e);
+        console.log('浏览器关闭了');
         this._browser = null;
       });
     }
@@ -76,9 +76,11 @@ class PuppeteerYesbank {
   async start(opts = {}) {
     const browser = await this.browser();
     const page = await browser.newPage();
-    let ua = opts.ua || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'
+    let ua =
+      opts.ua ||
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36';
     console.log('ua: ', ua);
-    await page.setUserAgent(ua)
+    await page.setUserAgent(ua);
     const headers = {
       'Accept-Encoding': 'gzip'
     };

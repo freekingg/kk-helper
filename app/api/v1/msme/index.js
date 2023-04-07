@@ -1,6 +1,6 @@
 import { LinRouter, NotFound, disableLoading } from 'lin-mizar';
 import { PuppeteerYesbank } from '../../../package/msme';
-import { SearchValidator } from "../../../validator/common";
+import { SearchValidator } from '../../../validator/common';
 
 // 实例
 const msmeApi = new LinRouter({
