@@ -25,4 +25,11 @@ class PaginateValidator extends LinValidator {
   }
 }
 
-export { PaginateValidator, PositiveIdValidator };
+class SearchValidator extends LinValidator {
+  constructor () {
+    super();
+    this.q = new Rule('isOptional');
+  }
+}
+
+export { PaginateValidator, PositiveIdValidator, SearchValidator };

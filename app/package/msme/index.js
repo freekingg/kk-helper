@@ -6,7 +6,7 @@ import token from './token';
 puppeteer.use(StealthPlugin());
 
 let launchOptions = {
-  timeout: 60000,
+  timeout: 120000,
   headless: true,
   ignoreHTTPSErrors: true,
   args: [
@@ -25,7 +25,10 @@ let launchOptions = {
     '--disable-popup-blocking',
     '--disable-infobars',
     '--disable-features=IsolateOrigins,site-per-process'
-  ]
+  ],
+  'ignoreDefaultArgs': ["--enable-automation"],
+  'devtools': true,
+  'dumpio': true
 };
 
 /**
@@ -73,6 +76,9 @@ class PuppeteerYesbank {
   async start(opts = {}) {
     const browser = await this.browser();
     const page = await browser.newPage();
+    let ua = opts.ua || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'
+    console.log('ua: ', ua);
+    await page.setUserAgent(ua)
     const headers = {
       'Accept-Encoding': 'gzip'
     };
